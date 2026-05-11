@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صدقة جارية | الشهيد عادل الهور</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #d4af37; --dark-bg: rgba(5, 15, 12, 0.85); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        
+        body { 
+            background-color: #000; 
+            display: flex; justify-content: center; align-items: center; 
+            min-height: 100vh; color: white; overflow: hidden;
+        }
+
+        /* فيديو الخلفية */
+        #bg-video {
+            position: fixed; top: 50%; left: 50%; min-width: 100%; min-height: 100%;
+            z-index: -100; transform: translateX(-50%) translateY(-50%);
+            filter: brightness(0.4);
+        }
+
+        /* إطار الجوال */
+        .phone-frame {
+            width: 350px; height: 720px;
+            background: var(--dark-bg);
+            border: 10px solid #1a1a1a;
+            border-radius: 45px;
+            position: relative;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+            overflow: hidden; display: flex; flex-direction: column;
+            backdrop-filter: blur(5px);
+        }
+
+        .notch { width: 140px; height: 22px; background: #1a1a1a; position: absolute; top: 0; left: 50%; transform: translateX(-50%); border-bottom-left-radius: 15px; border-bottom-right-radius: 15px; z-index: 10; }
+
+        .screen {
+            padding: 20px; display: flex; flex-direction: column; align-items: center;
+            height: 100%; overflow-y: auto; scrollbar-width: none;
+        }
+
+        .martyr-img {
+            width: 150px; height: 200px;
+            border-radius: 18px; border: 3px solid var(--gold);
+            object-fit: cover; margin-top: 30px;
+            box-shadow: 0 0 20px var(--gold);
+        }
+
+        .name { color: var(--gold); font-size: 19px; margin: 15px 0 5px 0; font-weight: bold; text-align: center; }
+
+        .tasbih-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            border-radius: 20px; padding: 15px; width: 100%; margin-bottom: 20px; text-align: center;
+        }
+        .count { font-size: 50px; font-weight: 900; color: var(--gold); margin-bottom: 10px; }
+        
+        /* توزيع أزرار التسبيح والتصفير */
+        .tasbih-controls { display: flex; gap: 10px; width: 100%; }
+        .btn-add { flex: 3; background: var(--gold); color: #000; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 18px; }
+        .btn-reset { flex: 1; background: #333; color: #fff; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 14px; }
+
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
+        .item {
+            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
+            padding: 15px; border-radius: 15px; color: white; text-decoration: none;
+            text-align: center; font-size: 13px; font-weight: bold; display: flex; flex-direction: column; gap: 5px;
+            cursor: pointer;
+        }
+        .item:hover { border-color: var(--gold); background: rgba(212, 175, 55, 0.2); }
+
+        /* نافذة المصحف */
+        #quran-overlay {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: #fff; z-index: 1000;
+        }
+        .close-quran {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: #d4af37; color: black; padding: 10px 30px; border-radius: 50px;
+            font-weight: bold; cursor: pointer; z-index: 1001;
+        }
+
+        .footer { margin-top: auto; padding-top: 20px; font-size: 11px; color: rgba(255,255,255,0.8); text-align: center; line-height: 1.6; }
+    </style>
+</head>
+<body onclick="playFatiha()">
+
+    <audio id="fatihaAudio" src="maher-al-mueaqly-001-al-fatiha-3083-1938.mp3"></audio>
+
+    <video autoplay muted loop playsinline id="bg-video">
+        <source src="https://www.shutterstock.com/shutterstock/videos/1081702841/preview/stock-footage-mecca-saudi-arabia-july-th-the-holy-kaaba-in-the-masjid-al-haram-during-the-pilgrimage.mp4" type="video/mp4">
+    </video>
+
+    <div class="phone-frame">
+        <div class="notch"></div>
+        <div class="screen">
+            <img src="./WhatsApp Image 2026-05-11 at 4.13.56 PM.jpeg" class="martyr-img" alt="عادل الهور">
+            <p style="font-size: 11px; margin-top: 10px; opacity: 0.8;">صدقة جارية عن روح الشهيد</p>
+            <h2 class="name">عادل عبد القادر الهور</h2>
+            
+            <div class="tasbih-card">
+                <div class="count" id="num">0</div>
+                <div class="tasbih-controls">
+                    <button class="btn-add" onclick="add()">سبّح</button>
+                    <button class="btn-reset" onclick="reset()">تصفير</button>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="item" onclick="openQuran()">
+                    <span style="font-size:20px;">📖</span> المصحف كامل
+                </div>
+                <a href="https://quran.com/reciters/1" target="_blank" class="item">
+                    <span style="font-size:20px;">🎤</span> التلاوات
+                </a>
+                <a href="https://prayer-times.com" target="_blank" class="item">
+                    <span style="font-size:20px;">🕌</span> المواقيت
+                </a>
+                <div class="item" onclick="share()">
+                    <span style="font-size:20px;">📤</span> مشاركة
+                </div>
+            </div>
+
+            <div class="footer">
+                اللهم اجعلها في ميزان حسناته<br>
+                <b>تصميم مصعب محمد للتواصل 0597034313</b>
+            </div>
+        </div>
+    </div>
+
+    <div id="quran-overlay">
+        <iframe src="https://quran.com/page/1" style="width: 100%; height: 100%; border: none;"></iframe>
+        <div class="close-quran" onclick="closeQuran()">إغلاق المصحف</div>
+    </div>
+
+    <script>
+        let count = localStorage.getItem('myCount') || 0;
+        document.getElementById('num').innerText = count;
+
+        function add() {
+            count++;
+            document.getElementById('num').innerText = count;
+            localStorage.setItem('myCount', count);
+            if(navigator.vibrate) navigator.vibrate(50);
+        }
+
+        function reset() {
+            if(confirm('هل تريد تصفير العداد؟')) {
+                count = 0;
+                document.getElementById('num').innerText = count;
+                localStorage.setItem('myCount', count);
+            }
+        }
+
+        function openQuran() {
+            document.getElementById('quran-overlay').style.display = 'block';
+        }
+
+        function closeQuran() {
+            document.getElementById('quran-overlay').style.display = 'none';
+        }
+
+        function share() {
+            if (navigator.share) {
+                navigator.share({ title: 'صدقة جارية عن الشهيد عادل الهور', url: window.location.href });
+            } else {
+                alert("انسخ رابط الموقع وشاركه مع أحبابك");
+            }
+        }
+
+        let audioStarted = false;
+        function playFatiha() {
+            const audio = document.getElementById('fatihaAudio');
+            if (!audioStarted) {
+                audio.play().catch(e => console.log("تفاعل مطلوب"));
+                audioStarted = true;
+            }
+        }
+    </script>
+</body>
+</html>
