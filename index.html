@@ -3,180 +3,299 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>صدقة جارية | الشهيد عادل الهور</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>نظام مصعب محمد المتكامل ⚡</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        :root { --gold: #d4af37; --dark-bg: rgba(5, 15, 12, 0.85); }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        :root {
+            --gold: #ffcf33;
+            --primary: #0f172a;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+            --text: #f8fafc;
+            --danger: #ef4444;
+            --sms-blue: #2563eb;
+        }
+
+        .light-theme {
+            --primary: #f1f5f9;
+            --glass: rgba(255, 255, 255, 0.9);
+            --border: rgba(0, 0, 0, 0.05);
+            --text: #1e293b;
+            --gold: #d97706;
+        }
+
+        * { box-sizing: border-box; font-family: 'Cairo', sans-serif; transition: 0.3s; }
+
+        body {
+            margin: 0; background: var(--primary); color: var(--text); min-height: 100vh; padding: 15px;
+            background-image: radial-gradient(circle at top right, rgba(56, 189, 248, 0.05), transparent);
+        }
+
+        .theme-toggle {
+            position: fixed; top: 15px; left: 15px; z-index: 1000;
+            width: 40px; height: 40px; border-radius: 12px;
+            background: var(--glass); border: 1px solid var(--border);
+            cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px);
+        }
+
+        #login-page { height: 80vh; display: flex; align-items: center; justify-content: center; }
+        .login-card { background: var(--glass); padding: 30px; border-radius: 24px; border: 1px solid var(--border); width: 320px; text-align: center; }
+
+        #admin-panel { display: none; max-width: 1000px; margin: auto; }
+
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 25px; }
+
+        .card {
+            background: var(--glass); backdrop-filter: blur(15px); padding: 18px;
+            border-radius: 20px; border: 1px solid var(--border);
+        }
+
+        .card h3 { font-size: 15px; margin: 0 0 12px 0; color: var(--gold); border-bottom: 1px solid var(--border); padding-bottom: 5px; }
+
+        input, select {
+            width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border);
+            background: rgba(0,0,0,0.2); color: var(--text); font-size: 14px; margin-bottom: 8px; outline: none;
+        }
+
+        .btn-main {
+            background: linear-gradient(135deg, var(--gold), #fbbf24);
+            color: #000; border: none; padding: 12px; border-radius: 10px;
+            font-weight: 700; width: 100%; cursor: pointer;
+        }
+
+        .btn-warning {
+            background: var(--danger); color: white; border: none; padding: 12px;
+            border-radius: 10px; font-weight: 700; width: 100%; cursor: pointer; margin-top: 5px;
+        }
+
+        .btn-sms {
+            background: var(--sms-blue); color: white; border: none; padding: 12px;
+            border-radius: 10px; font-weight: 700; width: 100%; cursor: pointer; margin-top: 5px;
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 5px; }
+        th { color: var(--gold); padding: 10px; text-align: center; font-size: 12px; background: rgba(0,0,0,0.1); }
+        td { padding: 10px; text-align: center; border-bottom: 1px solid var(--border); cursor: pointer; font-size: 13px; }
+
+        .modal {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px); z-index: 2000; align-items: center; justify-content: center;
+        }
+        .modal-content { background: var(--primary); border: 1px solid var(--gold); padding: 25px; border-radius: 24px; width: 360px; max-height: 95vh; overflow-y: auto; }
         
-        body { 
-            background-color: #000; 
-            display: flex; justify-content: center; align-items: center; 
-            min-height: 100vh; color: white; overflow: hidden;
-        }
-
-        /* فيديو الخلفية */
-        #bg-video {
-            position: fixed; top: 50%; left: 50%; min-width: 100%; min-height: 100%;
-            z-index: -100; transform: translateX(-50%) translateY(-50%);
-            filter: brightness(0.4);
-        }
-
-        /* إطار الجوال */
-        .phone-frame {
-            width: 350px; height: 720px;
-            background: var(--dark-bg);
-            border: 10px solid #1a1a1a;
-            border-radius: 45px;
-            position: relative;
-            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
-            overflow: hidden; display: flex; flex-direction: column;
-            backdrop-filter: blur(5px);
-        }
-
-        .notch { width: 140px; height: 22px; background: #1a1a1a; position: absolute; top: 0; left: 50%; transform: translateX(-50%); border-bottom-left-radius: 15px; border-bottom-right-radius: 15px; z-index: 10; }
-
-        .screen {
-            padding: 20px; display: flex; flex-direction: column; align-items: center;
-            height: 100%; overflow-y: auto; scrollbar-width: none;
-        }
-
-        .martyr-img {
-            width: 150px; height: 200px;
-            border-radius: 18px; border: 3px solid var(--gold);
-            object-fit: cover; margin-top: 30px;
-            box-shadow: 0 0 20px var(--gold);
-        }
-
-        .name { color: var(--gold); font-size: 19px; margin: 15px 0 5px 0; font-weight: bold; text-align: center; }
-
-        .tasbih-card {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(212, 175, 55, 0.4);
-            border-radius: 20px; padding: 15px; width: 100%; margin-bottom: 20px; text-align: center;
-        }
-        .count { font-size: 50px; font-weight: 900; color: var(--gold); margin-bottom: 10px; }
-        
-        /* توزيع أزرار التسبيح والتصفير */
-        .tasbih-controls { display: flex; gap: 10px; width: 100%; }
-        .btn-add { flex: 3; background: var(--gold); color: #000; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 18px; }
-        .btn-reset { flex: 1; background: #333; color: #fff; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 14px; }
-
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
-        .item {
-            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
-            padding: 15px; border-radius: 15px; color: white; text-decoration: none;
-            text-align: center; font-size: 13px; font-weight: bold; display: flex; flex-direction: column; gap: 5px;
-            cursor: pointer;
-        }
-        .item:hover { border-color: var(--gold); background: rgba(212, 175, 55, 0.2); }
-
-        /* نافذة المصحف */
-        #quran-overlay {
-            display: none; position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%; background: #fff; z-index: 1000;
-        }
-        .close-quran {
-            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: #d4af37; color: black; padding: 10px 30px; border-radius: 50px;
-            font-weight: bold; cursor: pointer; z-index: 1001;
-        }
-
-        .footer { margin-top: auto; padding-top: 20px; font-size: 11px; color: rgba(255,255,255,0.8); text-align: center; line-height: 1.6; }
+        label { font-size: 12px; display: block; margin-bottom: 4px; opacity: 0.8; }
     </style>
 </head>
-<body onclick="playFatiha()">
+<body class="dark-theme">
 
-<audio id="fatihaAudio" src="faithaAudio.mp3"></audio>
-    <video autoplay muted loop playsinline id="bg-video">
-        <source src="https://www.shutterstock.com/shutterstock/videos/1081702841/preview/stock-footage-mecca-saudi-arabia-july-th-the-holy-kaaba-in-the-masjid-al-haram-during-the-pilgrimage.mp4" type="video/mp4">
-    </video>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
 
-    <div class="phone-frame">
-        <div class="notch"></div>
-        <div class="screen">
-            <img src="./WhatsApp Image 2026-05-11 at 4.13.56 PM.jpeg" class="martyr-img" alt="عادل الهور">
-            <p style="font-size: 11px; margin-top: 10px; opacity: 0.8;">صدقة جارية عن روح الشهيد</p>
-            <h2 class="name">عادل عبد القادر الهور</h2>
-            
-            <div class="tasbih-card">
-                <div class="count" id="num">0</div>
-                <div class="tasbih-controls">
-                    <button class="btn-add" onclick="add()">سبّح</button>
-                    <button class="btn-reset" onclick="reset()">تصفير</button>
-                </div>
+    <div id="login-page">
+        <div class="login-card">
+            <h2 style="color:var(--gold); margin-bottom: 20px;">⚡ نظام مصعب</h2>
+            <input type="text" id="user" placeholder="اسم المستخدم">
+            <input type="password" id="pass" placeholder="كلمة المرور">
+            <button class="btn-main" onclick="login()">دخول</button>
+        </div>
+    </div>
+
+    <div id="admin-panel">
+        <div class="grid-container">
+            <div class="card">
+                <h3>⚙️ سعر الكيلو</h3>
+                <input type="number" id="price" step="0.1" oninput="savePrice(); calculate()" placeholder="مثال: 0.5">
             </div>
-
-            <div class="grid">
-                <div class="item" onclick="openQuran()">
-                    <span style="font-size:20px;">📖</span> المصحف كامل
+            <div class="card">
+                <h3>👤 إضافة مشترك</h3>
+                <input type="text" id="name" placeholder="الاسم">
+                <input type="tel" id="phone" placeholder="رقم الهاتف">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <input type="number" id="prev" placeholder="السابقة" oninput="calculate()">
+                    <input type="number" id="curr" placeholder="الحالية" oninput="calculate()">
                 </div>
-                <a href="https://quran.com/reciters/1" target="_blank" class="item">
-                    <span style="font-size:20px;">🎤</span> التلاوات
-                </a>
-                <a href="https://prayer-times.com" target="_blank" class="item">
-                    <span style="font-size:20px;">🕌</span> المواقيت
-                </a>
-                <div class="item" onclick="share()">
-                    <span style="font-size:20px;">📤</span> مشاركة
+                <div style="text-align: center; margin: 10px 0;">
+                   المبلغ: <span id="total-val" style="color:var(--gold); font-weight:900; font-size:18px;">0.00</span>
                 </div>
+                <button class="btn-main" onclick="saveRecord()">حفظ وإرسال الفاتورة ✅</button>
             </div>
+        </div>
 
-            <div class="footer">
-                اللهم اجعلها في ميزان حسناته<br>
-                <b>تصميم مصعب محمد للتواصل 0597034313</b>
+        <div class="card">
+            <h3>📊 البحث والسجل (اضغط للتعديل)</h3>
+            <input type="text" id="searchInput" placeholder="ابحث باسم المشترك..." onkeyup="filterTable()" style="border: 1.5px solid var(--gold);">
+            <div style="overflow-x: auto;">
+                <table id="recordsTable">
+                    <thead>
+                        <tr><th>الاسم</th><th>س / ح</th><th>المبلغ</th><th>الحالة</th></tr>
+                    </thead>
+                    <tbody id="history-body"></tbody>
+                </table>
             </div>
         </div>
     </div>
 
-    <div id="quran-overlay">
-        <iframe src="https://quran.com/page/1" style="width: 100%; height: 100%; border: none;"></iframe>
-        <div class="close-quran" onclick="closeQuran()">إغلاق المصحف</div>
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <h3 style="color:var(--gold); margin-top:0; text-align:center;">إدارة بيانات المشترك</h3>
+            <input type="hidden" id="editIdx">
+            
+            <label>اسم المشترك:</label>
+            <input type="text" id="editName">
+            
+            <label>رقم الهاتف:</label>
+            <input type="tel" id="editPhone">
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div>
+                    <label>القراءة السابقة:</label>
+                    <input type="number" id="editPrev" oninput="reCalcEdit()">
+                </div>
+                <div>
+                    <label>القراءة الحالية:</label>
+                    <input type="number" id="editCurr" oninput="reCalcEdit()">
+                </div>
+            </div>
+
+            <label>المبلغ المستحق (تلقائي):</label>
+            <input type="text" id="editTotal" readonly style="background:rgba(255,255,255,0.05); color:var(--gold); font-weight:bold;">
+
+            <label>حالة الدفع:</label>
+            <select id="editStatus">
+                <option value="pending">⏳ انتظار</option>
+                <option value="paid">✅ تم التسديد</option>
+            </select>
+            
+            <div style="margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;">
+                <button class="btn-main" onclick="updateRecord()">حفظ التعديلات</button>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px;">
+                    <button class="btn-warning" onclick="sendWarning()">⚠️ إنذار WhatsApp</button>
+                    <button class="btn-sms" onclick="sendSMSWarning()">💬 إنذار SMS</button>
+                </div>
+                
+                <button class="btn-main" style="background:none; color:var(--text); border:1px solid var(--border); margin-top:10px;" onclick="closeModal()">إغلاق</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        let count = localStorage.getItem('myCount') || 0;
-        document.getElementById('num').innerText = count;
-
-        function add() {
-            count++;
-            document.getElementById('num').innerText = count;
-            localStorage.setItem('myCount', count);
-            if(navigator.vibrate) navigator.vibrate(50);
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            const isLight = document.body.classList.contains('light-theme');
+            document.getElementById('themeBtn').innerText = isLight ? '☀️' : '🌙';
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
         }
 
-        function reset() {
-            if(confirm('هل تريد تصفير العداد؟')) {
-                count = 0;
-                document.getElementById('num').innerText = count;
-                localStorage.setItem('myCount', count);
-            }
+        function login() {
+            if (document.getElementById('user').value === 'mosab' && document.getElementById('pass').value === '272007') {
+                document.getElementById('login-page').style.display = 'none';
+                document.getElementById('admin-panel').style.display = 'block';
+                loadHistory();
+            } else { Swal.fire('خطأ', 'بيانات غير صحيحة', 'error'); }
         }
 
-        function openQuran() {
-            document.getElementById('quran-overlay').style.display = 'block';
+        function calculate() {
+            const p = parseFloat(document.getElementById('prev').value) || 0;
+            const c = parseFloat(document.getElementById('curr').value) || 0;
+            const price = parseFloat(document.getElementById('price').value) || 0.5;
+            document.getElementById('total-val').innerText = ((c - p) * price).toFixed(2);
         }
 
-        function closeQuran() {
-            document.getElementById('quran-overlay').style.display = 'none';
+        function reCalcEdit() {
+            const p = parseFloat(document.getElementById('editPrev').value) || 0;
+            const c = parseFloat(document.getElementById('editCurr').value) || 0;
+            const price = parseFloat(document.getElementById('price').value) || 0.5;
+            document.getElementById('editTotal').value = ((c - p) * price).toFixed(2);
         }
 
-        function share() {
-            if (navigator.share) {
-                navigator.share({ title: 'صدقة جارية عن الشهيد عادل الهور', url: window.location.href });
-            } else {
-                alert("انسخ رابط الموقع وشاركه مع أحبابك");
-            }
+        function saveRecord() {
+            const name = document.getElementById('name').value, phone = document.getElementById('phone').value;
+            const prev = document.getElementById('prev').value, curr = document.getElementById('curr').value;
+            const total = document.getElementById('total-val').innerText;
+
+            if(!name || !curr) return Swal.fire('تنبيه', 'أكمل البيانات أولاً', 'info');
+            
+            const history = JSON.parse(localStorage.getItem('elec_records') || '[]');
+            history.push({ name, phone, prev, curr, total, status: 'pending', date: new Date().toLocaleDateString() });
+            localStorage.setItem('elec_records', JSON.stringify(history));
+            
+            loadHistory();
+            Swal.fire('تم الحفظ', 'تم تسجيل الفاتورة بنجاح', 'success');
+            
+            // إرسال الفاتورة العادية عند الحفظ لأول مرة
+            const msg = `فاتورة كهرباء للمشترك: ${name}\nالقراءة السابقة: ${prev}\nالقراءة الحالية: ${curr}\nالمبلغ المطلوب: ${total} شيكل\nتحويل بال باي: 0597034313`;
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        let audioStarted = false;
-        function playFatiha() {
-            const audio = document.getElementById('fatihaAudio');
-            if (!audioStarted) {
-                audio.play().catch(e => console.log("تفاعل مطلوب"));
-                audioStarted = true;
-            }
+        function loadHistory() {
+            const history = JSON.parse(localStorage.getItem('elec_records') || '[]');
+            const body = document.getElementById('history-body');
+            body.innerHTML = '';
+            history.reverse().forEach((r, idx) => {
+                const color = r.status === 'paid' ? '#27ae60' : '#f39c12';
+                body.innerHTML += `<tr onclick="openEdit(${history.length - 1 - idx})">
+                    <td style="font-weight:bold">${r.name}</td>
+                    <td>${r.prev} / ${r.curr}</td>
+                    <td style="color:var(--gold)">${r.total}</td>
+                    <td style="color:${color}">${r.status === 'paid' ? 'مدفوع' : 'انتظار'}</td>
+                </tr>`;
+            });
         }
+
+        function openEdit(idx) {
+            const r = JSON.parse(localStorage.getItem('elec_records'))[idx];
+            document.getElementById('editIdx').value = idx;
+            document.getElementById('editName').value = r.name;
+            document.getElementById('editPhone').value = r.phone;
+            document.getElementById('editPrev').value = r.prev;
+            document.getElementById('editCurr').value = r.curr;
+            document.getElementById('editTotal').value = r.total;
+            document.getElementById('editStatus').value = r.status;
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        function updateRecord() {
+            const idx = document.getElementById('editIdx').value;
+            let history = JSON.parse(localStorage.getItem('elec_records'));
+            history[idx].name = document.getElementById('editName').value;
+            history[idx].phone = document.getElementById('editPhone').value;
+            history[idx].prev = document.getElementById('editPrev').value;
+            history[idx].curr = document.getElementById('editCurr').value;
+            history[idx].total = document.getElementById('editTotal').value;
+            history[idx].status = document.getElementById('editStatus').value;
+            localStorage.setItem('elec_records', JSON.stringify(history));
+            loadHistory(); closeModal();
+            Swal.fire('تم التحديث', 'تم حفظ التعديلات الجديدة', 'success');
+        }
+
+        function sendWarning() {
+            const name = document.getElementById('editName').value;
+            const phone = document.getElementById('editPhone').value;
+            const msg = `عزيزي المشترك (${name})\nيرجى تحويل الفاتورة اليوم قبل فصل التيار الكهربائي.\nرقم الحساب بال باي: 0597034313`;
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function sendSMSWarning() {
+            const name = document.getElementById('editName').value;
+            const phone = document.getElementById('editPhone').value;
+            const msg = `عزيزي المشترك (${name})\nيرجى تحويل الفاتورة اليوم قبل فصل التيار الكهربائي.\nرقم الحساب بال باي: 0597034313`;
+            window.location.href = `sms:${phone}?body=${encodeURIComponent(msg)}`;
+        }
+
+        function closeModal() { document.getElementById('editModal').style.display = 'none'; }
+
+        function filterTable() {
+            const filter = document.getElementById("searchInput").value.toLowerCase();
+            const trs = document.querySelectorAll("#recordsTable tbody tr");
+            trs.forEach(tr => tr.style.display = tr.innerText.toLowerCase().includes(filter) ? "" : "none");
+        }
+
+        function savePrice() { localStorage.setItem('elec_price', document.getElementById('price').value); }
+        window.onload = () => { 
+            if(localStorage.getItem('theme') === 'light') toggleTheme(); 
+            document.getElementById('price').value = localStorage.getItem('elec_price') || 0.5;
+        };
     </script>
 </body>
 </html>
