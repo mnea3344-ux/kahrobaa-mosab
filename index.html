@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام مصعب محمد المتكامل ⚡</title>
+    <title>نظام مصعب المتكامل ⚡</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
@@ -44,6 +44,8 @@
 
         #admin-panel { display: none; max-width: 1000px; margin: auto; }
 
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+
         .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 25px; }
 
         .card {
@@ -64,26 +66,18 @@
             font-weight: 700; width: 100%; cursor: pointer;
         }
 
-        .btn-warning {
-            background: var(--danger); color: white; border: none; padding: 12px;
-            border-radius: 10px; font-weight: 700; width: 100%; cursor: pointer; margin-top: 5px;
-        }
-
-        .btn-sms {
-            background: var(--sms-blue); color: white; border: none; padding: 12px;
-            border-radius: 10px; font-weight: 700; width: 100%; cursor: pointer; margin-top: 5px;
-        }
+        .btn-warning { background: var(--danger); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; width: 100%; cursor: pointer; margin-top: 5px; }
+        .btn-sms { background: var(--sms-blue); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; width: 100%; cursor: pointer; margin-top: 5px; }
 
         table { width: 100%; border-collapse: collapse; margin-top: 5px; }
         th { color: var(--gold); padding: 10px; text-align: center; font-size: 12px; background: rgba(0,0,0,0.1); }
-        td { padding: 10px; text-align: center; border-bottom: 1px solid var(--border); cursor: pointer; font-size: 13px; }
+        td { padding: 10px; text-align: center; border-bottom: 1px solid var(--border); font-size: 13px; cursor: pointer; }
 
         .modal {
             display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85);
             backdrop-filter: blur(10px); z-index: 2000; align-items: center; justify-content: center;
         }
         .modal-content { background: var(--primary); border: 1px solid var(--gold); padding: 25px; border-radius: 24px; width: 360px; max-height: 95vh; overflow-y: auto; }
-        
         label { font-size: 12px; display: block; margin-bottom: 4px; opacity: 0.8; }
     </style>
 </head>
@@ -101,6 +95,11 @@
     </div>
 
     <div id="admin-panel">
+        <div class="header-top">
+            <h3 style="margin:0; color:var(--gold)">أهلاً مصعب 👋</h3>
+            <button onclick="logout()" style="background:none; border:1px solid var(--danger); color:var(--danger); padding:5px 10px; border-radius:8px; cursor:pointer; font-size:12px;">تسجيل الخروج</button>
+        </div>
+
         <div class="grid-container">
             <div class="card">
                 <h3>⚙️ سعر الكيلو</h3>
@@ -127,7 +126,7 @@
             <div style="overflow-x: auto;">
                 <table id="recordsTable">
                     <thead>
-                        <tr><th>الاسم</th><th>س / ح</th><th>المبلغ</th><th>الحالة</th></tr>
+                        <tr><th>الاسم</th><th>س / ح</th><th>المبلغ</th><th>الحالة</th><th>حذف</th></tr>
                     </thead>
                     <tbody id="history-body"></tbody>
                 </table>
@@ -140,21 +139,12 @@
             <h3 style="color:var(--gold); margin-top:0; text-align:center;">إدارة بيانات المشترك</h3>
             <input type="hidden" id="editIdx">
             
-            <label>اسم المشترك:</label>
-            <input type="text" id="editName">
-            
-            <label>رقم الهاتف:</label>
-            <input type="tel" id="editPhone">
+            <label>اسم المشترك:</label><input type="text" id="editName">
+            <label>رقم الهاتف:</label><input type="tel" id="editPhone">
             
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <div>
-                    <label>القراءة السابقة:</label>
-                    <input type="number" id="editPrev" oninput="reCalcEdit()">
-                </div>
-                <div>
-                    <label>القراءة الحالية:</label>
-                    <input type="number" id="editCurr" oninput="reCalcEdit()">
-                </div>
+                <div><label>السابقة:</label><input type="number" id="editPrev" oninput="reCalcEdit()"></div>
+                <div><label>الحالية:</label><input type="number" id="editCurr" oninput="reCalcEdit()"></div>
             </div>
 
             <label>المبلغ المستحق (تلقائي):</label>
@@ -168,12 +158,10 @@
             
             <div style="margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;">
                 <button class="btn-main" onclick="updateRecord()">حفظ التعديلات</button>
-                
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px;">
-                    <button class="btn-warning" onclick="sendWarning()">⚠️ إنذار WhatsApp</button>
-                    <button class="btn-sms" onclick="sendSMSWarning()">💬 إنذار SMS</button>
+                    <button class="btn-warning" onclick="sendWarning()">⚠️ واتساب</button>
+                    <button class="btn-sms" onclick="sendSMSWarning()">💬 SMS</button>
                 </div>
-                
                 <button class="btn-main" style="background:none; color:var(--text); border:1px solid var(--border); margin-top:10px;" onclick="closeModal()">إغلاق</button>
             </div>
         </div>
@@ -195,6 +183,11 @@
             } else { Swal.fire('خطأ', 'بيانات غير صحيحة', 'error'); }
         }
 
+        function logout() {
+            document.getElementById('login-page').style.display = 'flex';
+            document.getElementById('admin-panel').style.display = 'none';
+        }
+
         function calculate() {
             const p = parseFloat(document.getElementById('prev').value) || 0;
             const c = parseFloat(document.getElementById('curr').value) || 0;
@@ -213,32 +206,43 @@
             const name = document.getElementById('name').value, phone = document.getElementById('phone').value;
             const prev = document.getElementById('prev').value, curr = document.getElementById('curr').value;
             const total = document.getElementById('total-val').innerText;
-
-            if(!name || !curr) return Swal.fire('تنبيه', 'أكمل البيانات أولاً', 'info');
+            if(!name || !curr) return Swal.fire('تنبيه', 'أكمل البيانات', 'info');
             
             const history = JSON.parse(localStorage.getItem('elec_records') || '[]');
-            history.push({ name, phone, prev, curr, total, status: 'pending', date: new Date().toLocaleDateString() });
+            history.push({ name, phone, prev, curr, total, status: 'pending' });
             localStorage.setItem('elec_records', JSON.stringify(history));
-            
             loadHistory();
-            Swal.fire('تم الحفظ', 'تم تسجيل الفاتورة بنجاح', 'success');
             
-            // إرسال الفاتورة العادية عند الحفظ لأول مرة
-            const msg = `فاتورة كهرباء للمشترك: ${name}\nالقراءة السابقة: ${prev}\nالقراءة الحالية: ${curr}\nالمبلغ المطلوب: ${total} شيكل\nتحويل بال باي: 0597034313`;
+            // --- الرسالة المطلوبة من مصعب ---
+            const diff = (parseFloat(curr) - parseFloat(prev)).toFixed(2);
+            const msg = `فاتورة كهرباء للمشترك: ${name}
+س/ ${prev}
+ح/ ${curr}
+الفرق/ ${diff} كيلو وات
+مستحق/ ${total} شيكل
+تحويل بال باي: 0597034313`;
+            
             window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+            Swal.fire('تم!', 'تم الحفظ وإرسال الفاتورة', 'success');
+            // تنظيف الحقول بعد الحفظ
+            document.getElementById('name').value = ''; document.getElementById('phone').value = '';
+            document.getElementById('prev').value = ''; document.getElementById('curr').value = '';
+            document.getElementById('total-val').innerText = '0.00';
         }
 
         function loadHistory() {
             const history = JSON.parse(localStorage.getItem('elec_records') || '[]');
             const body = document.getElementById('history-body');
             body.innerHTML = '';
-            history.reverse().forEach((r, idx) => {
+            history.slice().reverse().forEach((r, idx) => {
+                const actualIdx = history.length - 1 - idx;
                 const color = r.status === 'paid' ? '#27ae60' : '#f39c12';
-                body.innerHTML += `<tr onclick="openEdit(${history.length - 1 - idx})">
-                    <td style="font-weight:bold">${r.name}</td>
-                    <td>${r.prev} / ${r.curr}</td>
-                    <td style="color:var(--gold)">${r.total}</td>
-                    <td style="color:${color}">${r.status === 'paid' ? 'مدفوع' : 'انتظار'}</td>
+                body.innerHTML += `<tr>
+                    <td onclick="openEdit(${actualIdx})"><b>${r.name}</b></td>
+                    <td onclick="openEdit(${actualIdx})">${r.prev}/${r.curr}</td>
+                    <td onclick="openEdit(${actualIdx})" style="color:var(--gold)">${r.total}</td>
+                    <td onclick="openEdit(${actualIdx})" style="color:${color}">${r.status === 'paid' ? 'مدفوع' : 'انتظار'}</td>
+                    <td><button onclick="deleteRecord(${actualIdx})" style="background:none; border:none; color:var(--danger); cursor:pointer; font-size:16px;">🗑️</button></td>
                 </tr>`;
             });
         }
@@ -258,40 +262,45 @@
         function updateRecord() {
             const idx = document.getElementById('editIdx').value;
             let history = JSON.parse(localStorage.getItem('elec_records'));
-            history[idx].name = document.getElementById('editName').value;
-            history[idx].phone = document.getElementById('editPhone').value;
-            history[idx].prev = document.getElementById('editPrev').value;
-            history[idx].curr = document.getElementById('editCurr').value;
-            history[idx].total = document.getElementById('editTotal').value;
-            history[idx].status = document.getElementById('editStatus').value;
+            history[idx] = { 
+                name: document.getElementById('editName').value,
+                phone: document.getElementById('editPhone').value,
+                prev: document.getElementById('editPrev').value,
+                curr: document.getElementById('editCurr').value,
+                total: document.getElementById('editTotal').value,
+                status: document.getElementById('editStatus').value
+            };
             localStorage.setItem('elec_records', JSON.stringify(history));
-            loadHistory(); closeModal();
-            Swal.fire('تم التحديث', 'تم حفظ التعديلات الجديدة', 'success');
+            loadHistory(); closeModal(); Swal.fire('تم!', 'تم تحديث البيانات', 'success');
+        }
+
+        function deleteRecord(idx) {
+            Swal.fire({ title: 'حذف المشترك؟', icon: 'warning', showCancelButton: true, confirmButtonText: 'حذف', cancelButtonText: 'إلغاء' }).then(res => {
+                if(res.isConfirmed) {
+                    let h = JSON.parse(localStorage.getItem('elec_records'));
+                    h.splice(idx, 1);
+                    localStorage.setItem('elec_records', JSON.stringify(h));
+                    loadHistory();
+                }
+            });
         }
 
         function sendWarning() {
-            const name = document.getElementById('editName').value;
-            const phone = document.getElementById('editPhone').value;
-            const msg = `عزيزي المشترك (${name})\nيرجى تحويل الفاتورة اليوم قبل فصل التيار الكهربائي.\nرقم الحساب بال باي: 0597034313`;
-            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+            const n = document.getElementById('editName').value, ph = document.getElementById('editPhone').value, t = document.getElementById('editTotal').value;
+            const msg = `تذكير سداد للمشترك: ${n}\nالمبلغ المستحق: ${t} شيكل\nيرجى السداد لتجنب الفصل.`;
+            window.open(`https://wa.me/${ph}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
         function sendSMSWarning() {
-            const name = document.getElementById('editName').value;
-            const phone = document.getElementById('editPhone').value;
-            const msg = `عزيزي المشترك (${name})\nيرجى تحويل الفاتورة اليوم قبل فصل التيار الكهربائي.\nرقم الحساب بال باي: 0597034313`;
-            window.location.href = `sms:${phone}?body=${encodeURIComponent(msg)}`;
+            window.location.href = `sms:${document.getElementById('editPhone').value}?body=يرجى سداد فاتورة الكهرباء`;
         }
 
         function closeModal() { document.getElementById('editModal').style.display = 'none'; }
-
+        function savePrice() { localStorage.setItem('elec_price', document.getElementById('price').value); }
         function filterTable() {
             const filter = document.getElementById("searchInput").value.toLowerCase();
-            const trs = document.querySelectorAll("#recordsTable tbody tr");
-            trs.forEach(tr => tr.style.display = tr.innerText.toLowerCase().includes(filter) ? "" : "none");
+            document.querySelectorAll("#recordsTable tbody tr").forEach(tr => tr.style.display = tr.innerText.toLowerCase().includes(filter) ? "" : "none");
         }
-
-        function savePrice() { localStorage.setItem('elec_price', document.getElementById('price').value); }
         window.onload = () => { 
             if(localStorage.getItem('theme') === 'light') toggleTheme(); 
             document.getElementById('price').value = localStorage.getItem('elec_price') || 0.5;
